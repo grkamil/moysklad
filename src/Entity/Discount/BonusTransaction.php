@@ -58,7 +58,7 @@ class BonusTransaction extends MetaEntity
     public $owner;
 
     /**
-     * @Type("MoySklad\Entity\Agent\Agent")
+     * @Type("MoySklad\Entity\Agent\Counterparty")
      */
     public $agent;
 
@@ -68,18 +68,7 @@ class BonusTransaction extends MetaEntity
     public $parentDocument;
 
     /**
-     * @Type("MoySklad\Entity\Group")
-     * @Generator(type="object", anyFromExists=true)
-     */
-    public $group;
-
-    /**
      * @Type("MoySklad\Entity\Discount\BonusProgram")
      */
     public $bonusProgram;
-
-    /**
-     * @Type("MoySklad\Entity\Agent\Organization")
-     */
-    public $organization;
 }

@@ -130,7 +130,7 @@ class CustomerOrder extends MetaEntity
     public $agentAccount;
 
     /**
-     * @Type("array<MoySklad\Entity\Attribute>")
+     * @Type("array<MoySklad\Entity\Document\CustomerOrderAttribute>")
      */
     public $attributes = [];
 

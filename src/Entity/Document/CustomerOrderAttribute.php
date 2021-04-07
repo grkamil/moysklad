@@ -3,29 +3,28 @@
 namespace MoySklad\Entity\Document;
 
 use JMS\Serializer\Annotation\Type;
+use MoySklad\Entity\MetaEntity;
 use MoySklad\Util\Object\Annotation\Generator;
 
-class CustomerOrderAttribute
+class CustomerOrderAttribute extends MetaEntity
 {
     /**
      * @Type("string")
-     * @Generator()
+     */
+    public $value;
+
+    /**
+     * @Type("string")
      */
     public $name;
 
     /**
-     * @Type("DateTime<'Y-m-d H:i:s.v'>")
-     * @Generator(type="datetime")
-     */
-    public $moment;
-
-    /**
      * @Type("string")
      */
-    public $href;
+    public $type;
 
     /**
-     * @Type("string")
+     * @Type("bool")
      */
-    public $fileName;
+    public $required;
 }

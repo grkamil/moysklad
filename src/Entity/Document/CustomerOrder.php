@@ -200,4 +200,9 @@ class CustomerOrder extends MetaEntity
      * @Type("MoySklad\Entity\MetaEntity")
      */
     public $salesChannel;
+
+    /**
+     * @Type("MoySklad\Entity\Address")
+     */
+    public $shipmentAddressFull;
 }

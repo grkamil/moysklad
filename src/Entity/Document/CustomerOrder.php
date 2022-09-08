@@ -205,4 +205,9 @@ class CustomerOrder extends MetaEntity
      * @Type("MoySklad\Entity\Address")
      */
     public $shipmentAddressFull;
+
+    /**
+     * @Type("array<MoySklad\Entity\MetaEntity>")
+     */
+    public $demands;
 }

@@ -158,4 +158,10 @@ class Organization extends MetaEntity
      * @Type("MoySklad\Entity\ListEntity")
      */
     public $accounts;
+
+    /**
+     * @Type("string")
+     * @Generator()
+     */
+    public $inn;
 }

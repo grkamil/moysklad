@@ -20,7 +20,7 @@
     "php": "^7.3|^8.0",
     "guzzlehttp/guzzle": "^7.0",
     "ext-json": "*",
-    "jms/serializer": "3.10",
+    "jms/serializer": "3.18",
     "doctrine/annotations": "1.13.2",
     "yogarine/doctrine-annotation-autoload": "^0.3.0"
   },
@@ -36,6 +36,11 @@
   "autoload-dev": {
     "psr-4": {
       "MoySklad\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "yogarine/doctrine-annotation-autoload": true
     }
   }
 }

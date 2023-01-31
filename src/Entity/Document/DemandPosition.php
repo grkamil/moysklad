@@ -31,8 +31,8 @@ class DemandPosition extends MetaEntity
     public $price;
 
     /**
-     * @Type("int")
-     * @Generator(type="negativeInt")
+     * @Type("float")
+     * @Generator()
      */
     public $discount;
 

@@ -230,6 +230,7 @@ class RequestExecutor
     private function executeRequest(Request $request): string
     {
         try {
+            $request = $request->withHeader('Accept-Encoding', 'gzip');
             $response = $this->client->sendRequest($request);
 
             if ($response->getStatusCode() != 200 &&

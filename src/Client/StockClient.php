@@ -5,6 +5,7 @@ namespace MoySklad\Client;
 use MoySklad\ApiClient;
 use MoySklad\Client\Endpoint\GetMetadataAttributeEndpoint;
 use MoySklad\Client\Endpoint\GetMetadataEndpoint;
+use MoySklad\Entity\ListByCurrentStocks;
 use MoySklad\Entity\ListByStocks;
 use MoySklad\Entity\ListEntity;
 use MoySklad\Entity\Stock;
@@ -45,7 +46,7 @@ class StockClient extends EntityClientBase
      * @throws ApiClientException
      * @throws \Exception
      */
-    public function getAll(array $params = []) : ListEntity
+    public function getAll(array $params = []): ListEntity
     {
         /** @var $listEntity ListEntity */
         $listEntity = RequestExecutor::path($this->getApi(), $this->getPath() . '/all')->params($params)->get(ListEntity::class);
@@ -61,10 +62,20 @@ class StockClient extends EntityClientBase
      * @throws ApiClientException
      * @throws \Exception
      */
-    public function getAllByStore(array $params = []) : ListEntity
+    public function getAllByStore(array $params = []): ListEntity
     {
         /** @var $listEntity ListEntity */
         $listEntity = RequestExecutor::path($this->getApi(), $this->getPath() . '/bystore')->params($params)->get(ListByStocks::class);
+
+        return $listEntity;
+    }
+
+    public function getCurrentByStore(array $params = []): ListByCurrentStocks
+    {
+        /** @var $listEntity ListByCurrentStocks */
+        $listEntity = RequestExecutor::path($this->getApi(), $this->getPath() . '/bystore/current')
+            ->params($params)
+            ->get(ListByCurrentStocks::class);
 
         return $listEntity;
     }

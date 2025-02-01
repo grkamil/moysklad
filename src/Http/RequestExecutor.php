@@ -20,13 +20,13 @@ class RequestExecutor
 {
     use StringsTrait;
 
-    public const METHOD_GET = 'GET';
-    public const METHOD_POST = 'POST';
-    public const METHOD_PUT = 'PUT';
+    public const METHOD_GET    = 'GET';
+    public const METHOD_POST   = 'POST';
+    public const METHOD_PUT    = 'PUT';
     public const METHOD_DELETE = 'DELETE';
 
     public const TYPE_PATH = 'path';
-    public const TYPE_URL = 'url';
+    public const TYPE_URL  = 'url';
 
     public const API_PATH = "/api/remap/1.2";
 
@@ -89,9 +89,9 @@ class RequestExecutor
                     throw new \InvalidArgumentException('To make an API request you need an initialized instance of ApiClient!');
                 }
 
-                $this->client = $api->getClient();
+                $this->client      = $api->getClient();
                 $this->hostApiPath = $api->getHost() . static::API_PATH;
-                $this->url = $this->hostApiPath.$url;
+                $this->url         = $this->hostApiPath . $url;
                 break;
             case static::TYPE_URL:
                 if (is_null($api->getClient())) {
@@ -99,7 +99,7 @@ class RequestExecutor
                 }
 
                 $this->client = $api->getClient();
-                $this->url = $url;
+                $this->url    = $url;
 
                 break;
         }
@@ -197,11 +197,11 @@ class RequestExecutor
     private function auth(ApiClient $api): self
     {
         if ($api->getToken()) {
-            $this->headers['Authorization'] = 'Bearer '.$api->getToken();
+            $this->headers['Authorization'] = 'Bearer ' . $api->getToken();
             return $this;
         }
 
-        $this->headers['Authorization'] = 'Basic '.base64_encode($api->getLogin().':'.$api->getPassword());
+        $this->headers['Authorization'] = 'Basic ' . base64_encode($api->getLogin() . ':' . $api->getPassword());
         return $this;
     }
 
@@ -219,7 +219,7 @@ class RequestExecutor
             $this->query[urlencode($paramType)] = Param::renderParamString($paramType, $this->params);
         }
 
-        return $this->url.'?'.http_build_query($this->query);
+        return $this->url . '?' . http_build_query($this->query);
     }
 
     /**
@@ -229,30 +229,32 @@ class RequestExecutor
      */
     private function executeRequest(Request $request): string
     {
-        try {
-            $request = $request->withHeader('Accept-Encoding', 'gzip');
-            $response = $this->client->sendRequest($request);
+        return $this->retry(function () use ($request) {
+            try {
+                $request  = $request->withHeader('Accept-Encoding', 'gzip');
+                $response = $this->client->sendRequest($request);
 
-            if ($response->getStatusCode() != 200 &&
+                if ($response->getStatusCode() != 200 &&
                     $response->getStatusCode() != 201 &&
                     $response->getStatusCode() != 204) {
 
-                throw new ApiClientException(
-                    $request->getMethod().' '.$request->getUri(),
-                    $response->getStatusCode(),
-                    $response->getReasonPhrase()
-                );
-            }
+                    throw new ApiClientException(
+                        $request->getMethod() . ' ' . $request->getUri(),
+                        $response->getStatusCode(),
+                        $response->getReasonPhrase()
+                    );
+                }
 
-            return $response->getBody()->getContents();
-        } catch (GuzzleException $e) {
-            $message = $e->getMessage();
-            if ($e instanceof ClientException) {
-                $message .= ' Response content: ' . $e->getResponse()->getBody()->getContents();
-            }
+                return $response->getBody()->getContents();
+            } catch (GuzzleException $e) {
+                $message = $e->getMessage();
+                if ($e instanceof ClientException) {
+                    $message .= ' Response content: ' . $e->getResponse()->getBody()->getContents();
+                }
 
-            throw new ApiClientException($request->getMethod().' '.$request->getUri(), $e->getCode(), $message);
-        }
+                throw new ApiClientException($request->getMethod() . ' ' . $request->getUri(), $e->getCode(), $message);
+            }
+        });
     }
 
     /**
@@ -309,5 +311,19 @@ class RequestExecutor
         $request = new Request(static::METHOD_DELETE, $this->buildFullUrl(), $this->headers);
 
         $this->executeRequest($request);
+    }
+
+    private function retry($f, $delay = 10, $retries = 3)
+    {
+        try {
+            return $f();
+        } catch (\Exception $e) {
+            if ($retries > 0) {
+                sleep($delay);
+                return $this->retry($f, $delay, $retries - 1);
+            } else {
+                throw $e;
+            }
+        }
     }
 }

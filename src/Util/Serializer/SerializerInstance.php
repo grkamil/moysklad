@@ -7,6 +7,7 @@ use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
+use MoySklad\Entity\AttributeValue;
 use MoySklad\Entity\MetaEntity;
 use MoySklad\Entity\Barcode;
 
@@ -50,6 +51,12 @@ class SerializerInstance
                             Barcode::class,
                             'json',
                             new BarcodeDeserializeHandler()
+                        );
+                        $registry->registerHandler(
+                            self::DIRECTION['deserialization'],
+                            AttributeValue::class,
+                            'json',
+                            new AttributeValueDeserializeHandler()
                         );
                     }
                 )
